@@ -84,11 +84,9 @@ since only people with the link + PINs use it):
 ```json
 {
   "rules": {
-    "sales": {
-      ".read": true,
-      ".write": true,
-      ".validate": "true"
-    }
+    "sales": { ".read": true, ".write": true },
+    "logs":  { ".read": true, ".write": true },
+    "meta":  { ".read": true, ".write": true }
   }
 }
 ```
@@ -148,7 +146,8 @@ To start completely blank instead, set `const SEED = [];`.
 ## 7) Good to know
 
 - **Store view** shows only that branch's own input and history; it can edit any past day within the window.
-- **Management view** is read-only reporting: KPIs, per-branch table (sortable), two charts, and **Download CSV**.
+- **Management view** is read-only reporting: KPIs, per-branch table (sortable), two charts, **Download CSV**, and an **Audit Log**.
+- **Audit Log (accountability):** every time a branch saves or edits a number, it's recorded permanently (append-only) under `logs/` — showing which branch, which sale-date, the menu counts, the new total, *old→new* on edits, and the exact time. Management sees the full list (newest first) and can export it to CSV. Overwriting a day's number can't erase the trail. Requires the `logs` rule in Section 3.
 - Thai text and fonts (Noto Sans Thai) load from Google Fonts; charts use Chart.js — both from public CDNs, which work fine on GitHub Pages.
 - Days-left counts down to 30 Sep 2026. If you open it after that date it shows 0 — that's expected.
 
