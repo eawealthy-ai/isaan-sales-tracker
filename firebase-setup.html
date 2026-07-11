@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>วิธีตั้งค่า Firebase — โปรอีสาน ซีรีย์</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1216;--card:#171b21;--card2:#1d222a;--line:#2a313b;--txt:#eef2f6;--mut:#9aa7b4;
+    --brand:#ff6a2b;--brand2:#ffb03a;--ok:#2fbf71;--accent:#3aa0ff;--radius:16px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Noto Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--txt);
+    -webkit-font-smoothing:antialiased;line-height:1.6}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 60px}
+  header{display:flex;align-items:center;gap:14px;padding:14px 0 6px}
+  .logo{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:24px;
+    background:linear-gradient(135deg,var(--brand),var(--brand2))}
+  h1{font-size:24px;margin:0;line-height:1.15}
+  h1 small{display:block;font-size:13px;color:var(--mut);font-weight:500;margin-top:2px}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin:16px 0;font-size:14.5px}
+  .lead b{color:var(--brand2)}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:14px 0;position:relative;overflow:hidden}
+  .step::before{content:attr(data-n);position:absolute;top:-8px;left:-6px;font-size:74px;font-weight:800;color:#ffffff08;line-height:1}
+  .step h2{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:10px}
+  .num{flex:none;width:30px;height:30px;border-radius:9px;background:var(--brand);color:#231000;
+    display:grid;place-items:center;font-size:15px;font-weight:800}
+  .step h2 small{color:var(--mut);font-weight:500;font-size:12.5px}
+  .step .time{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:2px 9px;margin-left:auto}
+  ol,ul{margin:10px 0 4px;padding-left:22px}
+  li{margin:6px 0;font-size:14.5px}
+  .chip{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:7px;
+    padding:1px 8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--brand2)}
+  .btnlike{display:inline-block;background:var(--brand);color:#231000;border-radius:8px;padding:1px 9px;font-weight:700;font-size:12.5px}
+  .path{color:var(--accent);font-weight:600}
+  a{color:var(--accent);word-break:break-all}
+  pre{background:#0b0e12;border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto;
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;margin:12px 0}
+  .paste{border:1px dashed var(--brand);background:#1e140a}
+  .hl{color:var(--brand2)}
+  .cmt{color:#6b7684}
+  .note{border-left:3px solid var(--accent);background:#0e1620;padding:10px 14px;border-radius:0 10px 10px 0;
+    font-size:13.5px;margin:12px 0}
+  .warn{border-left:3px solid var(--brand2);background:#1e1a0e}
+  .ok{border-left:3px solid var(--ok);background:#0e1c14}
+  .done{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#0e1c14,#101a13);
+    border:1px solid #1e4632;border-radius:var(--radius);padding:18px 20px;margin:18px 0;font-size:15px}
+  .done .big{font-size:30px}
+  .foot{color:var(--mut);font-size:12px;text-align:center;margin-top:30px}
+  @media print{body{background:#fff;color:#111}.step,.lead,.done{border-color:#ccc}pre{background:#f4f4f4;color:#111}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🔥</div>
+    <h1>วิธีตั้งค่า Firebase<small>ฐานข้อมูลกลางสำหรับระบบติดตามยอดขาย · โปรอีสาน ซีรีย์</small></h1>
+  </header>
+
+  <div class="lead">
+    <b>Firebase</b> คือ “ที่เก็บข้อมูลกลาง” ฟรีของ Google เมื่อตั้งค่าเสร็จ ทุกสาขาจะกรอกยอดขายจากมือถือ/คอมเครื่องไหนก็ได้
+    แล้ว <b>ทีมผู้บริหารเห็นยอดรวมทุกสาขาแบบเรียลไทม์</b> · ใช้แพ็กเกจฟรี (Spark) เพียงพอมาก
+    (ยอดขาย ~300 จาน/วัน ใช้พื้นที่นิดเดียว) · ใช้เวลาประมาณ <b>10 นาที</b>
+  </div>
+
+  <div class="step" data-n="1">
+    <h2><span class="num">1</span> สร้างโปรเจกต์ <span class="time">~2 นาที</span></h2>
+    <ol>
+      <li>เปิด <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> แล้วเข้าสู่ระบบด้วยบัญชี Google (eawealthy@gmail.com ใช้ได้)</li>
+      <li>กด <span class="btnlike">Add project</span> (สร้างโปรเจกต์)</li>
+      <li>ตั้งชื่อ <span class="chip">isaan-tracker</span> → <span class="btnlike">Continue</span></li>
+      <li>ปิด Google Analytics (ไม่ต้องใช้) → <span class="btnlike">Create project</span> → รอสักครู่ → <span class="btnlike">Continue</span></li>
+    </ol>
+  </div>
+
+  <div class="step" data-n="2">
+    <h2><span class="num">2</span> สร้างฐานข้อมูล (“ที่เก็บข้อมูล”) <span class="time">~2 นาที</span></h2>
+    <ol>
+      <li>เมนูซ้าย: <span class="path">Build → Realtime Database</span></li>
+      <li>กด <span class="btnlike">Create Database</span></li>
+      <li>เลือกที่ตั้ง: <span class="chip">Singapore (asia-southeast1)</span> — ใกล้ไทยที่สุด</li>
+      <li>เลือก <span class="btnlike">Start in test mode</span> → <span class="btnlike">Enable</span></li>
+    </ol>
+    <div class="note ok">✅ ตอนนี้คุณมีฐานข้อมูลแล้ว จะเห็นลิงก์ด้านบนหน้าจอ เช่น<br>
+      <span class="chip">https://isaan-tracker-default-rtdb.asia-southeast1.firebasedatabase.app</span><br>
+      นั่นคือ “ที่อยู่ฐานข้อมูล” (databaseURL) — จำไว้ใช้ในขั้นตอนที่ 4</div>
+  </div>
+
+  <div class="step" data-n="3">
+    <h2><span class="num">3</span> ขอรหัสเชื่อมต่อ (config) <span class="time">~2 นาที</span></h2>
+    <ol>
+      <li>กด <span class="btnlike">⚙️ เฟือง</span> มุมซ้ายบน → <span class="path">Project settings</span></li>
+      <li>เลื่อนลงหา <span class="path">Your apps</span> → กดไอคอน <span class="chip">&lt;/&gt;</span> (Web)</li>
+      <li>ตั้งชื่อเล่น <span class="chip">isaan-web</span> → <span class="btnlike">Register app</span></li>
+      <li>จะเห็นโค้ดกล่องหนึ่งขึ้นต้นด้วย <span class="chip">const firebaseConfig = { ... }</span> — <b>เปิดค้างไว้</b> จะใช้ขั้นต่อไป</li>
+    </ol>
+  </div>
+
+  <div class="step" data-n="4">
+    <h2><span class="num">4</span> วางรหัสลงในไฟล์ <span class="time">~2 นาที</span></h2>
+    <p style="font-size:14.5px;margin:8px 0">เปิดไฟล์ <span class="chip">index.html</span> ด้วยโปรแกรมแก้ข้อความใดก็ได้ (เช่น TextEdit / Notepad / VS Code)
+    หาส่วนนี้ใกล้ ๆ ด้านบน แล้ววางค่าจากขั้นตอนที่ 3:</p>
+    <pre class="paste">  <span class="cmt">// วางค่าของคุณตรงนี้</span>
+  firebase: {
+    apiKey:      <span class="hl">"AIzaSy........"</span>,
+    authDomain:  <span class="hl">"isaan-tracker.firebaseapp.com"</span>,
+    databaseURL: <span class="hl">"https://isaan-tracker-default-rtdb.asia-southeast1.firebasedatabase.app"</span>,
+    projectId:   <span class="hl">"isaan-tracker"</span>,
+    appId:       <span class="hl">"1:....:web:...."</span>
+  }</pre>
+    <div class="note warn">⚠️ ค่า <span class="chip">databaseURL</span> สำคัญที่สุด — คัดลอกจากด้านบนหน้า Realtime Database (ขั้นตอนที่ 2)
+    ถ้าในกล่อง config ไม่มี databaseURL ให้ก๊อปจากหน้าฐานข้อมูลมาใส่เอง</div>
+    <p style="font-size:14.5px;margin:8px 0"><b>บันทึกไฟล์</b> แล้วเปิดใหม่ — แถบด้านบนต้องเปลี่ยนเป็น
+    <b style="color:var(--ok)">🟢 เชื่อมต่อระบบซิงก์ออนไลน์</b></p>
+  </div>
+
+  <div class="step" data-n="5">
+    <h2><span class="num">5</span> ตั้งกฎความปลอดภัย (ให้ใช้ได้เกิน 30 วัน) <span class="time">~1 นาที</span></h2>
+    <p style="font-size:14.5px;margin:8px 0">โหมด test mode จะล็อกอัตโนมัติหลัง ~30 วัน · ไปที่
+    <span class="path">Realtime Database → Rules</span> ลบของเดิม วางอันนี้แทน แล้วกด <span class="btnlike">Publish</span>:</p>
+    <pre>{
+  <span class="hl">"rules"</span>: {
+    <span class="hl">"sales"</span>: { <span class="hl">".read"</span>: true, <span class="hl">".write"</span>: true },
+    <span class="hl">"meta"</span>:  { <span class="hl">".read"</span>: true, <span class="hl">".write"</span>: true }
+  }
+}</pre>
+    <div class="note">🔒 เหมาะกับโปรโมชั่นภายในระยะสั้น เพราะมีเฉพาะคนที่รู้ลิงก์ + PIN เท่านั้นที่เข้าใช้
+    ถ้าต้องการให้ล็อกอัตโนมัติหลัง 30 ก.ย. 2026 บอกทีมงานได้ เดี๋ยวปรับกฎให้</div>
+  </div>
+
+  <div class="done">
+    <span class="big">🎉</span>
+    <div><b>เสร็จแล้ว!</b> ฐานข้อมูลกลางพร้อมใช้งาน · ข้อมูลวันที่ 10 ก.ค. จะขึ้นอัตโนมัติ<br>
+    ขั้นต่อไป: อัปโหลด <span class="chip">index.html</span> ขึ้น GitHub Pages เพื่อได้ลิงก์แชร์ให้ 24 สาขา (ดู README ข้อ 4)</div>
+  </div>
+
+  <div class="note ok">
+    <b>วิธีเช็คว่าใช้ได้จริง:</b> เข้าฐานข้อมูล Firebase (หน้า Realtime Database → Data) เมื่อสาขากรอกยอด
+    จะเห็นข้อมูลโผล่ใต้ <span class="chip">sales/รหัสสาขา/วันที่</span> ทันที · หรือลองเปิดหน้าเว็บ 2 เครื่อง
+    กรอกที่เครื่องหนึ่ง อีกเครื่องต้องอัปเดตตามภายในไม่กี่วินาที
+  </div>
+
+  <div class="foot">คู่มือฉบับนี้เปิดจากไฟล์ <span class="chip">firebase-setup.html</span> · สร้างด้วย Claude Code · สั่งพิมพ์ได้ (Ctrl/Cmd + P)</div>
+</div>
+</body>
+</html>
